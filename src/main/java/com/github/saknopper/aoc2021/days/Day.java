@@ -1,14 +1,14 @@
-package aoc2021.days;
+package com.github.saknopper.aoc2021.days;
 
-public class Day01 extends Day
+public abstract class Day implements IDay
 {
     @Override
     public String getAnswerPartOne() throws Exception {
-        return "answer...";
+        return "Not implemented";
     }
 
     @Override
     public String getAnswerPartTwo() throws Exception {
-        return "answer...";
+        return "Not implemented";
     }
 }

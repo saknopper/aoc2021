@@ -1,15 +1,15 @@
-package aoc2021;
+package com.github.saknopper.aoc2021;
 
 import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import aoc2021.days.Day;
+import com.github.saknopper.aoc2021.days.Day;
 
 public class Application
 {
-    private static final String PACKAGE_NAME = "aoc2021.days";
+    private static final String PACKAGE_NAME = "com.github.saknopper.aoc2021.days";
 
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 

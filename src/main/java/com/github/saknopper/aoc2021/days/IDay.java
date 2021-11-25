@@ -1,4 +1,4 @@
-package aoc2021.days;
+package com.github.saknopper.aoc2021.days;
 
 public interface IDay
 {
