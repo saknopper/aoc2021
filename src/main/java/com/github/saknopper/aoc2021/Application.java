@@ -13,7 +13,7 @@ public class Application
 
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
-    public static void main(String[] args) throws IllegalArgumentException, SecurityException {
+    public static void main(String[] args) {
         LOG.info("---------------------------------------------");
         LOG.info("Advent of Code 2021");
         LOG.info("---------------------------------------------");
