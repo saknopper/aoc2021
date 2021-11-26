@@ -9,8 +9,6 @@ import com.github.saknopper.aoc2021.days.Day;
 
 public class Application
 {
-    private static final String PACKAGE_NAME = "com.github.saknopper.aoc2021.days";
-
     private static final Logger LOG = LoggerFactory.getLogger(Application.class);
 
     public static void main(String[] args) {
@@ -20,11 +18,11 @@ public class Application
         LOG.info("");
 
         IntStream.rangeClosed(1, 25).boxed().forEach(day -> {
-            String dayNr = String.format("%02d", day);
+            final String dayNr = String.format("%02d", day);
 
             try {
                 @SuppressWarnings("unchecked")
-                Class<? extends Day> clazz = (Class<? extends Day>) Class.forName(PACKAGE_NAME + ".Day" + dayNr);
+                Class<? extends Day> clazz = (Class<? extends Day>) Class.forName(Application.class.getPackageName() + ".days.Day" + dayNr);
                 Day dayInstance = clazz.getDeclaredConstructor().newInstance();
                 LOG.info("Day {} part 1: {}", dayNr, dayInstance.getAnswerPartOne());
                 LOG.info("Day {} part 2: {}", dayNr, dayInstance.getAnswerPartTwo());
