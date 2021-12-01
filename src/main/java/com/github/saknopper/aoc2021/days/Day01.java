@@ -35,9 +35,7 @@ public class Day01 extends Day
 
         int largerThanPreviousCount = 0;
         for (int i = 3; i < list.size(); i++) {
-            int lastSlidingWindowSum = list.get(i - 1) + list.get(i - 2) + list.get(i - 3);
-            int currentSlidingWindowSum = list.get(i) + list.get(i - 1) + list.get(i - 2);
-            if (currentSlidingWindowSum > lastSlidingWindowSum)
+            if (list.get(i) > list.get(i - 3))
                 largerThanPreviousCount++;
         }
 
