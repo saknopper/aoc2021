@@ -18,14 +18,7 @@ public class Day05 extends Day
     public String getAnswerPartOne() throws Exception {
         Path path = Paths.get(getClass().getClassLoader().getResource("day05.txt").toURI());
         List<String> lines = Files.readAllLines(path);
-        List<Segment> segments = lines.stream().map(l -> {
-            final Matcher matcher = SEGMENT_PATTERN.matcher(l);
-            matcher.find();
-            final MatchResult mr = matcher.toMatchResult();
-
-            return new Segment(Integer.valueOf(mr.group(1)), Integer.valueOf(mr.group(2)), Integer.valueOf(mr.group(3)),
-                               Integer.valueOf(mr.group(4)));
-        }).toList();
+        List<Segment> segments = parseSegment(lines);
 
         int totalMaxX = Math.max(segments.stream().mapToInt(s -> s.x1).max().orElseThrow(NoSuchElementException::new),
                                  segments.stream().mapToInt(s -> s.x2).max().orElseThrow(NoSuchElementException::new));
@@ -54,14 +47,7 @@ public class Day05 extends Day
     public String getAnswerPartTwo() throws Exception {
         Path path = Paths.get(getClass().getClassLoader().getResource("day05.txt").toURI());
         List<String> lines = Files.readAllLines(path);
-        List<Segment> segments = lines.stream().map(l -> {
-            final Matcher matcher = SEGMENT_PATTERN.matcher(l);
-            matcher.find();
-            final MatchResult mr = matcher.toMatchResult();
-
-            return new Segment(Integer.valueOf(mr.group(1)), Integer.valueOf(mr.group(2)), Integer.valueOf(mr.group(3)),
-                               Integer.valueOf(mr.group(4)));
-        }).toList();
+        List<Segment> segments = parseSegment(lines);
 
         int totalMaxX = Math.max(segments.stream().mapToInt(s -> s.x1).max().orElseThrow(NoSuchElementException::new),
                                  segments.stream().mapToInt(s -> s.x2).max().orElseThrow(NoSuchElementException::new));
@@ -70,6 +56,7 @@ public class Day05 extends Day
 
         int[][] grid = new int[totalMaxY + 1][totalMaxX + 1];
         segments.stream().forEach(seg -> {
+            // TODO Simplify with deltaX and deltaY variables to avoid this many conditionals and for loops
             if (seg.x1 == seg.x2) {
                 int minY = Math.min(seg.y1, seg.y2);
                 int maxY = Math.max(seg.y1, seg.y2);
@@ -100,6 +87,17 @@ public class Day05 extends Day
         });
 
         return String.valueOf(Arrays.stream(grid).flatMapToInt(Arrays::stream).filter(pos -> pos >= 2).count());
+    }
+
+    private List<Segment> parseSegment(List<String> lines) {
+        return lines.stream().map(l -> {
+            final Matcher matcher = SEGMENT_PATTERN.matcher(l);
+            matcher.find();
+            final MatchResult mr = matcher.toMatchResult();
+
+            return new Segment(Integer.valueOf(mr.group(1)), Integer.valueOf(mr.group(2)), Integer.valueOf(mr.group(3)),
+                               Integer.valueOf(mr.group(4)));
+        }).toList();
     }
 
     record Segment(int x1, int y1, int x2, int y2) {}
