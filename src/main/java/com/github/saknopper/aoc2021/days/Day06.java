@@ -15,12 +15,11 @@ public class Day06 extends Day
     public String getAnswerPartOne() throws Exception {
         Path path = Paths.get(getClass().getClassLoader().getResource("day06.txt").toURI());
         List<String> lines = Files.readAllLines(path);
-        List<Integer> fish = Arrays.stream(lines.get(0).split(",")).map(Integer::valueOf).collect(Collectors.toList());
+        List<Integer> fish = Arrays.stream(lines.get(0).split(",")).map(Integer::valueOf).toList();
         Map<Integer, Long> fishCountPerTimer = new HashMap<>();
-        for (var f : fish) {
+        for (var f : fish)
             if (fishCountPerTimer.computeIfPresent(f, (timer, count) -> count + 1) == null)
                 fishCountPerTimer.put(f, 1l);
-        }
 
         fishCountPerTimer = fishSimulation(fishCountPerTimer, 80);
 
@@ -31,12 +30,11 @@ public class Day06 extends Day
     public String getAnswerPartTwo() throws Exception {
         Path path = Paths.get(getClass().getClassLoader().getResource("day06.txt").toURI());
         List<String> lines = Files.readAllLines(path);
-        List<Integer> fish = Arrays.stream(lines.get(0).split(",")).map(Integer::valueOf).collect(Collectors.toList());
+        List<Integer> fish = Arrays.stream(lines.get(0).split(",")).map(Integer::valueOf).toList();
         Map<Integer, Long> fishCountPerTimer = new HashMap<>();
-        for (var f : fish) {
+        for (var f : fish)
             if (fishCountPerTimer.computeIfPresent(f, (timer, count) -> count + 1) == null)
                 fishCountPerTimer.put(f, 1l);
-        }
 
         fishCountPerTimer = fishSimulation(fishCountPerTimer, 256);
 
