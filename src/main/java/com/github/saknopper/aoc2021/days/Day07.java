@@ -40,7 +40,7 @@ public class Day07 extends Day
 
         Map<Integer, Integer> fuelCostPerPosition = new HashMap<>();
         IntStream.rangeClosed(minPosition, maxPosition).forEach(pos -> {
-            int fuelCost = crabs.stream().map(curPos -> Math.abs(pos - curPos)).map(cost -> IntStream.rangeClosed(1, cost).sum()).mapToInt(Integer::intValue).sum();
+            int fuelCost = crabs.stream().map(curPos -> Math.abs(pos - curPos)).map(cost -> (cost * (cost + 1) / 2)).mapToInt(Integer::intValue).sum();
             fuelCostPerPosition.put(pos, fuelCost);
         });
 
