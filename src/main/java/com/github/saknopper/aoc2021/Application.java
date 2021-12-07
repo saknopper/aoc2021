@@ -22,8 +22,8 @@ public class Application
 
             try {
                 @SuppressWarnings("unchecked")
-                Class<? extends Day> clazz = (Class<? extends Day>) Class.forName(Application.class.getPackageName() + ".days.Day" + dayNr);
-                Day dayInstance = clazz.getDeclaredConstructor().newInstance();
+                final Class<? extends Day> clazz = (Class<? extends Day>) Class.forName(Application.class.getPackageName() + ".days.Day" + dayNr);
+                final Day dayInstance = clazz.getDeclaredConstructor().newInstance();
                 LOG.info("Day {} part 1: {}", dayNr, dayInstance.getAnswerPartOne());
                 LOG.info("Day {} part 2: {}", dayNr, dayInstance.getAnswerPartTwo());
             } catch (ClassNotFoundException e) {
