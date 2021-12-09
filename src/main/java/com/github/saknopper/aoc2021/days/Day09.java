@@ -40,7 +40,7 @@ public class Day09 extends Day
         for (int y = 0; y < height; y++)
             for (int x = 0; x < width; x++)
                 if (isLowPoint(grid, y, x))
-                   basinSizes.add(getBasinSize(grid, y, x, height, width, new ArrayList<>()));
+                   basinSizes.add(getBasinSize(grid, y, x, height, width));
 
         Collections.sort(basinSizes);
         int basinCount = basinSizes.size();
@@ -49,18 +49,18 @@ public class Day09 extends Day
     }
 
     // Based on https://en.wikipedia.org/wiki/Flood_fill
-    private static Integer getBasinSize(List<List<Integer>> grid, int y, int x, int height, int width, List<List<Integer>> checked) {
+    private static Integer getBasinSize(List<List<Integer>> grid, int y, int x, int height, int width) {
         if (x < 0 || x >= width || y < 0 || y >= height)
             return 0;
-        if (grid.get(y).get(x) == 9 || checked.contains(List.of(y, x)))
+        if (grid.get(y).get(x) == 9 || grid.get(y).get(x) == -1)
             return 0;
 
-        checked.add(List.of(y, x));
+        grid.get(y).set(x, -1);
 
         Integer count = 1;
         for (var toCheck : SURROUNDING_POSITIONS)
-            count += getBasinSize(grid, y + toCheck.get(0), x + toCheck.get(1), height, width, checked);
- 
+            count += getBasinSize(grid, y + toCheck.get(0), x + toCheck.get(1), height, width);
+
         return count;
     }
 
