@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 
 public class Day12 extends Day
 {
@@ -39,7 +39,7 @@ public class Day12 extends Day
 
     private Multimap<String, String> parseInputToMultimap() throws URISyntaxException, IOException {
         Path path = Paths.get(getClass().getClassLoader().getResource("day12.txt").toURI());
-        Multimap<String, String> edges = ArrayListMultimap.create();
+        Multimap<String, String> edges = MultimapBuilder.treeKeys().hashSetValues().build();
 
         Files.readAllLines(path).stream().forEach(line -> {
             String[] splitted = line.split("-");
