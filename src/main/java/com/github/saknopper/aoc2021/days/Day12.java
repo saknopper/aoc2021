@@ -24,17 +24,17 @@ public class Day12 extends Day
     @Override
     public String getAnswerPartOne() throws Exception {
         final Multimap<String, String> edges = parseInputToMultimap();
-        List<List<String>> paths = createValidPaths(edges, false);
+        long validPaths = createValidPaths(edges, false);
 
-        return String.valueOf(paths.size());
+        return String.valueOf(validPaths);
     }
 
     @Override
     public String getAnswerPartTwo() throws Exception {
         final Multimap<String, String> edges = parseInputToMultimap();
-        List<List<String>> paths = createValidPaths(edges, true);
+        long validPaths = createValidPaths(edges, true);
 
-        return String.valueOf(paths.size());
+        return String.valueOf(validPaths);
     }
 
     private Multimap<String, String> parseInputToMultimap() throws URISyntaxException, IOException {
@@ -52,22 +52,22 @@ public class Day12 extends Day
         return edges;
     }
 
-    private static List<List<String>> createValidPaths(final Multimap<String, String> edges,
+    private static long createValidPaths(final Multimap<String, String> edges,
             final boolean allowedToVisitOneSmallCaveTwice) {
-        List<List<String>> paths = new ArrayList<>();
+        long pathCounter = 0l;
 
         Collection<String> starts = edges.removeAll(START_VERTEX);
         Set<String> smallCaves = edges.keySet().stream().filter(key -> key.toLowerCase().equals(key)).filter(key -> !END_VERTEX.equals(key))
                 .collect(Collectors.toUnmodifiableSet());
         for (var step : starts) {
             List<String> path = new ArrayList<>(List.of(START_VERTEX));
-            paths.addAll(nextStepInPath(path, step, edges, smallCaves, allowedToVisitOneSmallCaveTwice));
+            pathCounter += nextStepInPath(path, step, edges, smallCaves, allowedToVisitOneSmallCaveTwice);
         }
 
-        return paths;
+        return pathCounter;
     }
 
-    private static List<List<String>> nextStepInPath(final List<String> path, final String currentStep,
+    private static long nextStepInPath(final List<String> path, final String currentStep,
             final Multimap<String, String> edges, final Set<String> smallCaves, final boolean allowedToVisitOneSmallCaveTwice) {
         final var newPath = new ArrayList<>(path);
 
@@ -76,9 +76,9 @@ public class Day12 extends Day
         newPath.add(currentStep);
 
         if (END_VERTEX.equals(currentStep))
-            return List.of(newPath);
+            return 1l;
 
-        List<List<String>> paths = new ArrayList<>();
+        long pathCounter = 0l;
         var nextSteps = edges.get(currentStep);
         for (var nextStep : nextSteps) {
             if (smallCaves.contains(nextStep) && newPath.contains(nextStep)) {
@@ -90,9 +90,9 @@ public class Day12 extends Day
                 }
             }
 
-            paths.addAll(nextStepInPath(newPath, nextStep, edges, smallCaves, allowedToVisitOneSmallCaveTwice));
+            pathCounter += nextStepInPath(newPath, nextStep, edges, smallCaves, allowedToVisitOneSmallCaveTwice);
         }
 
-        return paths;
+        return pathCounter;
     }
 }
