@@ -18,7 +18,7 @@ public class Day12 extends Day
 
     @Override
     public String getAnswerPartOne() throws Exception {
-        Multimap<String, String> edges = parseInputToMultimap();
+        final Multimap<String, String> edges = parseInputToMultimap();
         List<List<String>> paths = createValidPaths(edges, false);
 
         return String.valueOf(paths.size());
@@ -26,7 +26,7 @@ public class Day12 extends Day
 
     @Override
     public String getAnswerPartTwo() throws Exception {
-        Multimap<String, String> edges = parseInputToMultimap();
+        final Multimap<String, String> edges = parseInputToMultimap();
         List<List<String>> paths = createValidPaths(edges, true);
 
         return String.valueOf(paths.size());
@@ -45,7 +45,8 @@ public class Day12 extends Day
         return edges;
     }
 
-    private static List<List<String>> createValidPaths(Multimap<String, String> edges, boolean allowedToVisitOneSmallCaveTwice) {
+    private static List<List<String>> createValidPaths(final Multimap<String, String> edges,
+            final boolean allowedToVisitOneSmallCaveTwice) {
         List<List<String>> paths = new ArrayList<>();
         edges.get(START_VERTEX).forEach(step -> {
             List<String> path = new ArrayList<>(List.of(START_VERTEX));
@@ -55,8 +56,8 @@ public class Day12 extends Day
         return paths;
     }
 
-    private static List<List<String>> nextStepInPath(List<String> path, String currentStep, Multimap<String, String> edges,
-            boolean allowedToVisitOneSmallCaveTwice) {
+    private static List<List<String>> nextStepInPath(List<String> path, final String currentStep, final Multimap<String, String> edges,
+            final boolean allowedToVisitOneSmallCaveTwice) {
         path = new ArrayList<>(path);
         path.add(currentStep);
         if (END_VERTEX.equals(currentStep))
@@ -80,7 +81,7 @@ public class Day12 extends Day
         return paths;
     }
 
-    private static boolean containsSmallCaveVisitedMultipleTimes(List<String> path) {
+    private static boolean containsSmallCaveVisitedMultipleTimes(final List<String> path) {
         for (var pos : path)
             if (pos.toLowerCase().equals(pos) && path.indexOf(pos) != path.lastIndexOf(pos))
                 return true;
