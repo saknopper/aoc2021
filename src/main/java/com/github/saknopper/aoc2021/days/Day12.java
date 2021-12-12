@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -16,6 +18,8 @@ public class Day12 extends Day
 {
     private static final String START_VERTEX = "start";
     private static final String END_VERTEX = "end";
+
+    private static final String VISITED_TWICE_MARKER = "__2X__";
 
     @Override
     public String getAnswerPartOne() throws Exception {
@@ -53,44 +57,42 @@ public class Day12 extends Day
         List<List<String>> paths = new ArrayList<>();
 
         Collection<String> starts = edges.removeAll(START_VERTEX);
+        Set<String> smallCaves = edges.keySet().stream().filter(key -> key.toLowerCase().equals(key)).filter(key -> !END_VERTEX.equals(key))
+                .collect(Collectors.toUnmodifiableSet());
         for (var step : starts) {
             List<String> path = new ArrayList<>(List.of(START_VERTEX));
-            paths.addAll(nextStepInPath(path, step, edges, allowedToVisitOneSmallCaveTwice));
+            paths.addAll(nextStepInPath(path, step, edges, smallCaves, allowedToVisitOneSmallCaveTwice));
         }
 
         return paths;
     }
 
-    private static List<List<String>> nextStepInPath(List<String> path, final String currentStep, final Multimap<String, String> edges,
-            final boolean allowedToVisitOneSmallCaveTwice) {
-        path = new ArrayList<>(path);
-        path.add(currentStep);
+    private static List<List<String>> nextStepInPath(final List<String> path, final String currentStep,
+            final Multimap<String, String> edges, final Set<String> smallCaves, final boolean allowedToVisitOneSmallCaveTwice) {
+        final var newPath = new ArrayList<>(path);
+
+        if (smallCaves.contains(currentStep) && newPath.contains(currentStep))
+            newPath.add(0, VISITED_TWICE_MARKER);
+        newPath.add(currentStep);
+
         if (END_VERTEX.equals(currentStep))
-            return List.of(path);
+            return List.of(newPath);
 
         List<List<String>> paths = new ArrayList<>();
         var nextSteps = edges.get(currentStep);
         for (var nextStep : nextSteps) {
-            if (nextStep.toLowerCase().equals(nextStep) && path.contains(nextStep)) {
+            if (smallCaves.contains(nextStep) && newPath.contains(nextStep)) {
                 if (allowedToVisitOneSmallCaveTwice) {
-                    if (containsSmallCaveVisitedMultipleTimes(path))
+                    if (VISITED_TWICE_MARKER.equals(newPath.get(0)))
                         continue;
                 } else {
                     continue;
                 }
             }
 
-            paths.addAll(nextStepInPath(path, nextStep, edges, allowedToVisitOneSmallCaveTwice));
+            paths.addAll(nextStepInPath(newPath, nextStep, edges, smallCaves, allowedToVisitOneSmallCaveTwice));
         }
 
         return paths;
-    }
-
-    private static boolean containsSmallCaveVisitedMultipleTimes(final List<String> path) {
-        for (var pos : path)
-            if (pos.toLowerCase().equals(pos) && path.indexOf(pos) != path.lastIndexOf(pos))
-                return true;
-
-        return false;
     }
 }
