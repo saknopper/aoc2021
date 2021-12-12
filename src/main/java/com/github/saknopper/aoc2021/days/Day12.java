@@ -43,9 +43,9 @@ public class Day12 extends Day
 
         Files.readAllLines(path).stream().forEach(line -> {
             String[] splitted = line.split("-");
-            if (!START_VERTEX.equals(splitted[1]))
+            if (!START_VERTEX.equals(splitted[1]) && !END_VERTEX.equals(splitted[0]))
                 edges.put(splitted[0], splitted[1]);
-            if (!START_VERTEX.equals(splitted[0]))
+            if (!START_VERTEX.equals(splitted[0]) && !END_VERTEX.equals(splitted[1]))
                 edges.put(splitted[1], splitted[0]);
         });
 
