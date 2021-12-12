@@ -6,6 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import com.google.common.collect.ArrayListMultimap;
@@ -38,8 +39,10 @@ public class Day12 extends Day
 
         Files.readAllLines(path).stream().forEach(line -> {
             String[] splitted = line.split("-");
-            edges.put(splitted[0], splitted[1]);
-            edges.put(splitted[1], splitted[0]);
+            if (!START_VERTEX.equals(splitted[1]))
+                edges.put(splitted[0], splitted[1]);
+            if (!START_VERTEX.equals(splitted[0]))
+                edges.put(splitted[1], splitted[0]);
         });
 
         return edges;
@@ -48,10 +51,12 @@ public class Day12 extends Day
     private static List<List<String>> createValidPaths(final Multimap<String, String> edges,
             final boolean allowedToVisitOneSmallCaveTwice) {
         List<List<String>> paths = new ArrayList<>();
-        edges.get(START_VERTEX).forEach(step -> {
+
+        Collection<String> starts = edges.removeAll(START_VERTEX);
+        for (var step : starts) {
             List<String> path = new ArrayList<>(List.of(START_VERTEX));
             paths.addAll(nextStepInPath(path, step, edges, allowedToVisitOneSmallCaveTwice));
-        });
+        }
 
         return paths;
     }
@@ -64,7 +69,7 @@ public class Day12 extends Day
             return List.of(path);
 
         List<List<String>> paths = new ArrayList<>();
-        List<String> nextSteps = edges.get(currentStep).stream().filter(step -> !START_VERTEX.equals(step)).toList();
+        var nextSteps = edges.get(currentStep);
         for (var nextStep : nextSteps) {
             if (nextStep.toLowerCase().equals(nextStep) && path.contains(nextStep)) {
                 if (allowedToVisitOneSmallCaveTwice) {
