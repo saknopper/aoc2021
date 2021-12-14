@@ -24,7 +24,7 @@ public class Day13 extends Day
         return String.valueOf(markedPositions.size());
     }
 
-	@Override
+    @Override
     public String getAnswerPartTwo() throws Exception {
         Set<Mark> markedPositions = parseMarkedPositions();
         List<Fold> folds = parseFolds();
@@ -77,7 +77,7 @@ public class Day13 extends Day
             var splitted = l.split(",");
             return new Mark(Integer.parseInt(splitted[0]), Integer.parseInt(splitted[1]));
         }).collect(Collectors.toSet());
-	}
+    }
 
     private List<Fold> parseFolds() throws URISyntaxException, IOException {
         Path path = Paths.get(getClass().getClassLoader().getResource("day13.txt").toURI());

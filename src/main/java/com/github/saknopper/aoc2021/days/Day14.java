@@ -46,7 +46,8 @@ public class Day14 extends Day
             pairCounter.compute(polymer.substring(i, i + 2), (key, value) -> value == null ? 1 : value + 1);
 
         Map<String, Long> elementCounter = new TreeMap<>();
-        Splitter.fixedLength(1).splitToStream(polymer).forEach(elm -> elementCounter.compute(elm, (key, value) -> value == null ? 1 : value + 1));
+        Splitter.fixedLength(1).splitToStream(polymer)
+                .forEach(elm -> elementCounter.compute(elm, (key, value) -> value == null ? 1 : value + 1));
         for (int i = 0; i < loops; i++)
             pairCounter = applyPolymerRules(pairCounter, rules, elementCounter);
 
@@ -54,22 +55,21 @@ public class Day14 extends Day
                 - elementCounter.values().stream().mapToLong(Long::longValue).min().orElseThrow());
     }
 
-	private Map<String, Long> applyPolymerRules(Map<String, Long> pairCounter, Map<String, String> rules, Map<String, Long> elementCounter) {
+    private Map<String, Long> applyPolymerRules(Map<String, Long> pairCounter, Map<String, String> rules,
+            Map<String, Long> elementCounter) {
         Map<String, Long> updatedPairCounter = new TreeMap<>();
-        for (var entry : rules.entrySet()) {
-            if (pairCounter.containsKey(entry.getKey())) {
-                final long count = pairCounter.get(entry.getKey());
-                final String toAdd = rules.get(entry.getKey());
+        for (var entry : pairCounter.entrySet()) {
+            final long count = entry.getValue();
+            final String toAdd = rules.get(entry.getKey());
 
-                List<String> splittedSourcePolymer = Splitter.fixedLength(1).splitToList(entry.getKey());
-                String newPolymer1 = splittedSourcePolymer.get(0) + toAdd;
-                String newPolymer2 = toAdd + splittedSourcePolymer.get(1);
+            List<String> splittedSourcePolymer = Splitter.fixedLength(1).splitToList(entry.getKey());
+            String newPolymer1 = splittedSourcePolymer.get(0) + toAdd;
+            String newPolymer2 = toAdd + splittedSourcePolymer.get(1);
 
-                updatedPairCounter.compute(newPolymer1, (key, value) -> value == null ? count : value + count);
-                updatedPairCounter.compute(newPolymer2, (key, value) -> value == null ? count : value + count);
+            updatedPairCounter.compute(newPolymer1, (key, value) -> value == null ? count : value + count);
+            updatedPairCounter.compute(newPolymer2, (key, value) -> value == null ? count : value + count);
 
-                elementCounter.compute(toAdd, (key, value) -> value == null ? count : value + count);
-            }
+            elementCounter.compute(toAdd, (key, value) -> value == null ? count : value + count);
         }
 
         return updatedPairCounter;
