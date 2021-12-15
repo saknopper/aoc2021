@@ -90,7 +90,7 @@ public class Day15 extends Day
                 int destY = y + pos[0];
                 int destX = x + pos[1];
                 if (destY >= 0 && destY < maxHeight && destX >= 0 && destX < maxWidth) {
-                    if (distanceMap[destY][destX] > grid[destY][destX] + distanceMap[y][x] && !visitedMap[destY][destX]) {
+                    if (!visitedMap[destY][destX] && grid[destY][destX] + distanceMap[y][x] < distanceMap[destY][destX]) {
                         distanceMap[destY][destX] = grid[destY][destX] + distanceMap[y][x];
                         originMap.put(List.of(destY, destX), List.of(y, x));
                     }
