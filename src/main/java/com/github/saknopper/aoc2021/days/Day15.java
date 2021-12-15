@@ -13,7 +13,7 @@ import com.google.common.base.Splitter;
 
 public class Day15 extends Day
 {
-    private static final int[][] SURROUNDING_POSITIONS = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+    private static final int[][] SURROUNDING_POSITIONS = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
 
     @Override
     public String getAnswerPartOne() throws Exception {
