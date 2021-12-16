@@ -5,9 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.base.Splitter;
 
@@ -79,7 +77,7 @@ public class Day15 extends Day
         Arrays.stream(distanceMap).forEach(row -> Arrays.fill(row, Integer.MAX_VALUE));
         distanceMap[0][0] = 0;
 
-        final Map<List<Integer>, List<Integer>> originMap = new HashMap<>();
+        int[][] originMap = new int[maxHeight][maxWidth];
 
         boolean[][] visitedMap = new boolean[maxHeight][maxWidth];
 
@@ -88,18 +86,21 @@ public class Day15 extends Day
         int y = 0;
 
         while (!finished) {
+            visitedMap[y][x] = true;
+
+            if (x == maxWidth - 1 && y == maxHeight - 1)
+                finished = true;
+
             for (var pos : SURROUNDING_POSITIONS) {
                 int destY = y + pos[0];
                 int destX = x + pos[1];
                 if (destY >= 0 && destY < maxHeight && destX >= 0 && destX < maxWidth) {
                     if (!visitedMap[destY][destX] && grid[destY][destX] + distanceMap[y][x] < distanceMap[destY][destX]) {
                         distanceMap[destY][destX] = grid[destY][destX] + distanceMap[y][x];
-                        originMap.put(List.of(destY, destX), List.of(y, x));
+                        originMap[destY][destX] = (y * maxWidth) + x;
                     }
                 }
             }
-
-            visitedMap[y][x] = true;
 
             // Now search within the newly explored elements for the "lowest risk" path
             int currentBestValue = Integer.MAX_VALUE;
@@ -110,9 +111,6 @@ public class Day15 extends Day
                         y = i;
                         x = j;
                     }
-
-            if (x == maxWidth - 1 && y == maxHeight - 1)
-                finished = true;
         }
 
         // Start backtracking through originMap
@@ -122,9 +120,12 @@ public class Day15 extends Day
         x = maxWidth - 1;
         while (x > 0 || y > 0) {
             risksOnPath.add(grid[y][x]);
-            List<Integer> stepBack = originMap.get(List.of(y, x));
-            y = stepBack.get(0);
-            x = stepBack.get(1);
+
+            int y2 = originMap[y][x] / maxWidth;
+            int x2 = originMap[y][x] % maxWidth;
+
+            y = y2;
+            x = x2;
         }
 
         return risksOnPath.stream().mapToInt(Integer::intValue).sum();
