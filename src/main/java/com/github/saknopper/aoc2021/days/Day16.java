@@ -17,6 +17,8 @@ public class Day16 extends Day
         SUM, PRODUCT, MINIMUM, MAXIMUM, LITERAL, GREATER_THAN, LESS_THAN, EQUAL_TO
     }
 
+    record Packet(int version, PacketType type, long literal, List<Packet> subpackets) {}
+
     @Override
     public String getAnswerPartOne() throws Exception {
         Path path = Paths.get(getClass().getClassLoader().getResource("day16.txt").toURI());
@@ -30,7 +32,7 @@ public class Day16 extends Day
         while (!bin.isEmpty())
             bin = parsePacket(bin, packets, false);
 
-        return String.valueOf(sumOfAllVersionNumbers(packets));
+        return String.valueOf(sumOfAllVersionNumbers(packets.get(0)));
     }
 
     @Override
@@ -106,12 +108,10 @@ public class Day16 extends Day
         return bin.substring(stringOffset);
     }
 
-    private static int sumOfAllVersionNumbers(List<Packet> packets) {
-        int sum = 0;
-        for (var p : packets) {
-            sum += p.version;
-            sum += sumOfAllVersionNumbers(p.subpackets);
-        }
+    private static int sumOfAllVersionNumbers(Packet p) {
+        int sum = p.version;
+        for (var sub : p.subpackets)
+            sum += sumOfAllVersionNumbers(sub);
 
         return sum;
     }
@@ -161,6 +161,4 @@ public class Day16 extends Day
     private static String hexToBin(String s) {
         return Strings.padStart(new BigInteger(s, 16).toString(2), 4, '0');
     }
-
-    record Packet(int version, PacketType type, long literal, List<Packet> subpackets) {}
 }
