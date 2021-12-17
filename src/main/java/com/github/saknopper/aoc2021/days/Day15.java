@@ -81,15 +81,14 @@ public class Day15 extends Day
 
         boolean[][] visitedMap = new boolean[maxHeight][maxWidth];
 
-        boolean finished = false;
         int x = 0;
         int y = 0;
 
-        while (!finished) {
+        while (true) {
             visitedMap[y][x] = true;
 
             if (x == maxWidth - 1 && y == maxHeight - 1)
-                finished = true;
+                break;
 
             for (var pos : SURROUNDING_POSITIONS) {
                 int destY = y + pos[0];
@@ -114,12 +113,12 @@ public class Day15 extends Day
         }
 
         // Start backtracking through originMap
-        List<Integer> risksOnPath = new ArrayList<>();
+        int riskSum = 0;
 
         y = maxHeight - 1;
         x = maxWidth - 1;
         while (x > 0 || y > 0) {
-            risksOnPath.add(grid[y][x]);
+            riskSum += grid[y][x];
 
             int y2 = originMap[y][x] / maxWidth;
             int x2 = originMap[y][x] % maxWidth;
@@ -128,6 +127,6 @@ public class Day15 extends Day
             x = x2;
         }
 
-        return risksOnPath.stream().mapToInt(Integer::intValue).sum();
+        return riskSum;
     }
 }
