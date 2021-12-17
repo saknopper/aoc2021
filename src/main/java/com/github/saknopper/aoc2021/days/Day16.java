@@ -21,12 +21,10 @@ public class Day16 extends Day
 
     @Override
     public String getAnswerPartOne() throws Exception {
-        Path path = Paths.get(getClass().getClassLoader().getResource("day16.txt").toURI());
-        List<String> lines = Files.readAllLines(path);
-        if (lines.size() > 1)
-            throw new IllegalStateException("Expecting only a single input line");
+        final Path path = Paths.get(getClass().getClassLoader().getResource("day16.txt").toURI());
+        final List<String> lines = Files.readAllLines(path);
 
-        List<Packet> packets = new ArrayList<>();
+        final List<Packet> packets = new ArrayList<>();
 
         String bin = Splitter.fixedLength(1).splitToStream(lines.get(0)).map(Day16::hexToBin).collect(Collectors.joining());
         while (!bin.isEmpty())
@@ -37,12 +35,10 @@ public class Day16 extends Day
 
     @Override
     public String getAnswerPartTwo() throws Exception {
-        Path path = Paths.get(getClass().getClassLoader().getResource("day16.txt").toURI());
-        List<String> lines = Files.readAllLines(path);
-        if (lines.size() > 1)
-            throw new IllegalStateException("Expecting only a single input line");
+        final Path path = Paths.get(getClass().getClassLoader().getResource("day16.txt").toURI());
+        final List<String> lines = Files.readAllLines(path);
 
-        List<Packet> packets = new ArrayList<>();
+        final List<Packet> packets = new ArrayList<>();
 
         String bin = Splitter.fixedLength(1).splitToStream(lines.get(0)).map(Day16::hexToBin).collect(Collectors.joining());
         while (!bin.isEmpty())
@@ -63,14 +59,15 @@ public class Day16 extends Day
 
         List<Packet> subpackets = new ArrayList<>();
         StringBuilder sb = new StringBuilder();
-        if (type == PacketType.LITERAL) {
+        if (PacketType.LITERAL.equals(type)) {
             boolean lastGroup = false;
             while (!lastGroup) {
                 String group = bin.substring(stringOffset, stringOffset + 5);
-                sb.append(group.substring(1));
-                stringOffset += 5;
                 if (group.startsWith("0"))
                     lastGroup = true;
+
+                sb.append(group.substring(1));
+                stringOffset += 5;
             }
         } else {
             String lengthType = bin.substring(stringOffset, stringOffset + 1);
@@ -118,41 +115,22 @@ public class Day16 extends Day
 
     private static long evaluatePacket(Packet p) {
         switch (p.type) {
-            case EQUAL_TO: {
+            case EQUAL_TO:
                 return evaluatePacket(p.subpackets.get(0)) == evaluatePacket(p.subpackets.get(1)) ? 1l : 0l;
-            }
-            case GREATER_THAN: {
+            case GREATER_THAN:
                 return evaluatePacket(p.subpackets.get(0)) > evaluatePacket(p.subpackets.get(1)) ? 1l : 0l;
-            }
-            case LESS_THAN: {
+            case LESS_THAN:
                 return evaluatePacket(p.subpackets.get(0)) < evaluatePacket(p.subpackets.get(1)) ? 1l : 0l;
-            }
             case LITERAL:
                 return p.literal;
-            case MAXIMUM: {
-                long max = Long.MIN_VALUE;
-                for (var sub : p.subpackets)
-                    max = Math.max(max, evaluatePacket(sub));
-                return max;
-            }
-            case MINIMUM: {
-                long min = Long.MAX_VALUE;
-                for (var sub : p.subpackets)
-                    min = Math.min(min, evaluatePacket(sub));
-                return min;
-            }
-            case PRODUCT: {
-                long product = 1l;
-                for (var sub : p.subpackets)
-                    product *= evaluatePacket(sub);
-                return product;
-            }
-            case SUM: {
-                long sum = 0l;
-                for (var sub : p.subpackets)
-                    sum += evaluatePacket(sub);
-                return sum;
-            }
+            case MAXIMUM:
+                return p.subpackets.stream().map(Day16::evaluatePacket).mapToLong(Long::longValue).max().orElseThrow();
+            case MINIMUM:
+                return p.subpackets.stream().map(Day16::evaluatePacket).mapToLong(Long::longValue).min().orElseThrow();
+            case PRODUCT:
+                return p.subpackets.stream().map(Day16::evaluatePacket).mapToLong(Long::longValue).reduce(1l, (l1, l2) -> l1 * l2);
+            case SUM:
+                return p.subpackets.stream().map(Day16::evaluatePacket).mapToLong(Long::longValue).sum();
         }
 
         return 0l;
