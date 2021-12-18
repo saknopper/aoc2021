@@ -13,11 +13,11 @@ public class Day18 extends Day
     @Override
     public String getAnswerPartOne() throws Exception {
         Path path = Paths.get(getClass().getClassLoader().getResource("day18.txt").toURI());
-        List<String> lines = Files.readAllLines(path);
+        List<List<Node>> lines = Files.readAllLines(path).stream().map(Day18::parseLine).collect(Collectors.toList());
 
         List<Node> sumResult = new ArrayList<>();
         while (!lines.isEmpty()) {
-            sumResult = performSum(sumResult, parseLine(lines.remove(0)));
+            sumResult = performSum(sumResult, lines.remove(0));
             performReduce(sumResult);
         }
 
@@ -27,7 +27,7 @@ public class Day18 extends Day
     @Override
     public String getAnswerPartTwo() throws Exception {
         Path path = Paths.get(getClass().getClassLoader().getResource("day18.txt").toURI());
-        List<String> lines = Files.readAllLines(path);
+        List<List<Node>> lines = Files.readAllLines(path).stream().map(Day18::parseLine).collect(Collectors.toList());
 
         var maxMagnitude = Integer.MIN_VALUE;
 
@@ -36,7 +36,7 @@ public class Day18 extends Day
                 if (i == j)
                     continue;
 
-                List<Node> sumResult = performSum(parseLine(lines.get(i)), parseLine(lines.get(j)));
+                List<Node> sumResult = performSum(lines.get(i), lines.get(j));
                 performReduce(sumResult);
 
                 var magnitude = magnitude(sumResult);
@@ -127,7 +127,7 @@ public class Day18 extends Day
         return list.get(0).value;
     }
 
-    private List<Node> parseLine(String line) {
+    private static List<Node> parseLine(String line) {
         var list = new ArrayList<Node>();
         var depth = -1;
         for (var cc : line.toCharArray()) {
