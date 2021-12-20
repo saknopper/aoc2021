@@ -34,42 +34,40 @@ public class Day15 extends Day
         Path path = Paths.get(getClass().getClassLoader().getResource("day15.txt").toURI());
         List<String> lines = Files.readAllLines(path);
 
-        return "TOO SLOW";
+        int originalHeight = lines.size();
+        int originalWidth = lines.get(0).length();
 
-//        int originalHeight = lines.size();
-//        int originalWidth = lines.get(0).length();
-//
-//        int timesToEnlarge = 5;
-//
-//        final List<List<Integer>> tmpGrid = new ArrayList<>();
-//        lines.stream().forEach(l -> {
-//            List<Integer> row = new ArrayList<>();
-//            Splitter.fixedLength(1).splitToStream(l).map(Integer::valueOf).forEach(row::add);
-//            tmpGrid.add(row);
-//        });
-//
-//        for (int step = 1; step < timesToEnlarge; step++)
-//            for (var row : tmpGrid)
-//                for (int i = 0; i < originalWidth; i++)
-//                    row.add((row.get(i) + step - 1) % 9 + 1);
-//
-//        for (int step = 1; step < timesToEnlarge; step++)
-//            for (int row = 0; row < originalHeight; row++) {
-//                List<Integer> newRow = new ArrayList<>(tmpGrid.get(row));
-//                int currentStep = step;
-//                newRow.replaceAll(value -> (value + currentStep - 1) % 9 + 1);
-//                tmpGrid.add(newRow);
-//            }
-//
-//        int maxHeight = tmpGrid.size();
-//        int maxWidth = tmpGrid.get(0).size();
-//
-//        int[][] grid = new int[maxHeight][maxWidth];
-//        for (int y = 0; y < maxHeight; y++)
-//            for (int x = 0; x < maxWidth; x++)
-//                grid[y][x] = tmpGrid.get(y).get(x);
-//
-//        return String.valueOf(calculateSafestPath(grid, maxHeight, maxWidth));
+        int timesToEnlarge = 5;
+
+        final List<List<Integer>> tmpGrid = new ArrayList<>();
+        lines.stream().forEach(l -> {
+            List<Integer> row = new ArrayList<>();
+            Splitter.fixedLength(1).splitToStream(l).map(Integer::valueOf).forEach(row::add);
+            tmpGrid.add(row);
+        });
+
+        for (int step = 1; step < timesToEnlarge; step++)
+            for (var row : tmpGrid)
+                for (int i = 0; i < originalWidth; i++)
+                    row.add((row.get(i) + step - 1) % 9 + 1);
+
+        for (int step = 1; step < timesToEnlarge; step++)
+            for (int row = 0; row < originalHeight; row++) {
+                List<Integer> newRow = new ArrayList<>(tmpGrid.get(row));
+                int currentStep = step;
+                newRow.replaceAll(value -> (value + currentStep - 1) % 9 + 1);
+                tmpGrid.add(newRow);
+            }
+
+        int maxHeight = tmpGrid.size();
+        int maxWidth = tmpGrid.get(0).size();
+
+        int[][] grid = new int[maxHeight][maxWidth];
+        for (int y = 0; y < maxHeight; y++)
+            for (int x = 0; x < maxWidth; x++)
+                grid[y][x] = tmpGrid.get(y).get(x);
+
+        return String.valueOf(calculateSafestPath(grid, maxHeight, maxWidth));
     }
 
     private int calculateSafestPath(int[][] grid, int maxHeight, int maxWidth) {
