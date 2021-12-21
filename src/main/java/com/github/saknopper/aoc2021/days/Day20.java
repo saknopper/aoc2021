@@ -16,7 +16,7 @@ public class Day20 extends Day
         Path path = Path.of(getClass().getClassLoader().getResource("day20.txt").toURI());
         List<String> lines = Files.readAllLines(path).stream().filter(Predicate.not(String::isBlank)).collect(Collectors.toList());
 
-        final String imageEnhancer = lines.remove(0);
+        final char[] imageEnhancer = lines.remove(0).toCharArray();
 
         return String.valueOf(applyImageEnhancerAmountOfSteps(lines, 2, imageEnhancer));
     }
@@ -26,12 +26,12 @@ public class Day20 extends Day
         Path path = Path.of(getClass().getClassLoader().getResource("day20.txt").toURI());
         List<String> lines = Files.readAllLines(path).stream().filter(Predicate.not(String::isBlank)).collect(Collectors.toList());
 
-        final String imageEnhancer = lines.remove(0);
+        final char[] imageEnhancer = lines.remove(0).toCharArray();
 
         return String.valueOf(applyImageEnhancerAmountOfSteps(lines, 50, imageEnhancer));
     }
 
-    private int applyImageEnhancerAmountOfSteps(List<String> lines, int steps, String imageEnhancer) {
+    private int applyImageEnhancerAmountOfSteps(List<String> lines, int steps, char[] imageEnhancer) {
         int inputHeight = lines.size();
         int inputWidth = lines.get(0).length();
 
@@ -55,7 +55,7 @@ public class Day20 extends Day
         return Arrays.stream(croppedGrid).flatMapToInt(Arrays::stream).sum();
     }
 
-    private int[][] applyImageEnhancer(int[][] input, int maxHeight, int maxWidth, String enhancer) {
+    private int[][] applyImageEnhancer(int[][] input, int maxHeight, int maxWidth, char[] enhancer) {
         int[][] grid = new int[maxHeight][maxWidth];
         for (int y = 1; y < maxHeight - 1; y++) {
             for (int x = 1; x < maxWidth - 1; x++) {
@@ -66,7 +66,7 @@ public class Day20 extends Day
         return grid;
     }
 
-    private int getNewValue(int[][] input, int y, int x, String enhancer) {
+    private int getNewValue(int[][] input, int y, int x, char[] enhancer) {
         StringBuilder sb = new StringBuilder();
 
         for (var pos : POSITIONS)
@@ -74,6 +74,6 @@ public class Day20 extends Day
 
         int enhancerPos = Integer.valueOf(sb.toString(), 2);
 
-        return enhancer.substring(enhancerPos, enhancerPos + 1).equals("#") ? 1 : 0;
+        return enhancer[enhancerPos] == '#' ? 1 : 0;
     }
 }
